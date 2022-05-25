@@ -1,0 +1,145 @@
+.top, .main {
+    width: 100%;
+    display: block;
+    text-align: left;
+    margin: 12px 0px;
+}
+
+.main .Polaris-Button, .top .Polaris-Button {
+    float: right;
+    margin-left: 6px;
+}
+
+.top .Polaris-Heading {
+    width: fit-content;
+    display: inline-block;
+}
+
+p.label {
+    width: fit-content;
+    display: inline-block;
+    vertical-align: top;
+    padding-top: 8px;
+    margin-left: 24px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.line-item {
+    border: 1px solid #666;
+    border-top: 0px;
+    background: rgb(237, 237, 237);
+    height: 56px;
+    padding: 6px;
+}
+
+.subtype {
+    border-top: 1px solid #666;
+}
+
+.price-group {
+    margin-left: 48px;
+}
+
+.swatch {
+    margin-left: 96px;
+}
+
+.swatch-img {
+    height: 36px;
+    width: 36px;
+    border: 1px solid #666;
+    background-color: salmon;
+    display: inline-block;
+    background-size: cover;
+    background-position: center center;
+}
+
+table {
+    border: 1px solid #AAA;
+    width: 100%;
+}
+
+.msrp {
+    color: red !important;
+}
+
+.col-title, .row-title {
+    background-color: #999;
+}
+
+tr {
+    border-bottom: 1px solid #AAA;
+}
+
+td {
+    border-right: 1px solid #AAA;
+    padding: 2px;
+}
+
+.grid-cont {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    min-height: 48px;
+    padding: 4px;
+    border: 1px solid #666;
+    margin-bottom: 12px;
+}
+
+img.Polaris-EmptyState__Image {
+    width: 100% !important;
+    margin: 0 auto !important;
+    margin-top: 200px !important;
+    margin-bottom: 20px !important;
+}
+
+.grid-cont h2 {
+    height: 48px;
+    padding: 14px;
+}
+
+.main h2 {
+    width: fit-content;
+    display: inline-block;
+}
+
+.surcharge h3 {
+    height: 48px;
+    border: 1px solid #999;
+}
+
+.surcharge-item {
+    height: 48px;
+    border: 1px solid #999;
+}
+
+.surcharge h3, .surcharge-item {
+    padding: 14px;
+}
+
+.grid-cont button {
+    margin: 4px 4px 0px 0px;
+}
+
+.upper-bar {
+    height: 48px;
+}
+
+.line-name {
+    position: relative;
+    top: 12px;
+}
+
+.Polaris-Modal__Body {
+    padding: 24px;
+}
+
+.isOpen {
+    height: fit-content;
+}
+
+.closed {
+    height: 56px;
+    overflow: hidden;
+}
