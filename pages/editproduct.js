@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Heading, Button, Modal, TextField, RadioButton, Stack, DropZone, Thumbnail, Caption, Checkbox, Select } from "@shopify/polaris";
 
-const urlBase = "https://d65c-75-187-144-202.ngrok.io";
+const urlBase = "https://fb12-24-140-100-54.ngrok.io";
 
 class Subtype extends React.Component {
   constructor(props) {
@@ -74,7 +74,7 @@ const Swatch = ((props) => {
   let urlString = "url(" + urlBase + "/public/sw_" + props.internalId + ".jpg)";
   return (
     <div className="swatch line-item">
-      <div className="swatch-img" style={{ backgroundImage: urlString }}></div>
+      {/* <div className="swatch-img" style={{ backgroundImage: urlString }}></div> */}
       <p className="label">{props.name}</p>
       <Button onClick={() => {
         props.parent.doDelete(props.realId, "swatch")
@@ -295,6 +295,32 @@ const PopupModal = ((props) => {
             value={props.parent.state.fields[6]}
             onChange={(x) => props.parent.changeFields(x, 6)}
           />
+          <TextField
+            label="Miniumum Width"
+            value={props.parent.state.fields[0]}
+            onChange={(x) => props.parent.changeFields(x, 0)}
+          />
+          <TextField
+            label="Maximum Width"
+            value={props.parent.state.fields[1]}
+            onChange={(x) => props.parent.changeFields(x, 1)}
+          />
+          <TextField
+            label="Minimum Height"
+            value={props.parent.state.fields[2]}
+            onChange={(x) => props.parent.changeFields(x, 2)}
+          />
+          <TextField
+            label="Maximum Height"
+            value={props.parent.state.fields[4]}
+            onChange={(x) => props.parent.changeFields(x, 4)}
+          />
+          <Checkbox
+            label="Dual Swatch?"
+            helpText="Check if this type requires 2 swatch selections, i.e. Day/Night"
+            checked={props.parent.state.fields[8]}
+            onChange={(x) => props.parent.changeFields(x, 8)}
+          />
         </Modal>
       )
       break;
@@ -468,7 +494,7 @@ const EditOptions = ((props) => {
                                   }}>Delete</Button>
                                   <span className="line-name">{x.name}&nbsp;-&nbsp;
                                     {x.value}{x.type == 'true' ? '%' : '$'}
-                                    &nbsp;| Allow quantity? {x.quantity ? "True" : "False"}</span>
+                                    &nbsp;| Allow quantity? {x.quantity ? "True" : "False"} | Net Min: {x.min_w}" x {x.min_h}" |  Net Max: {x.max_w}" x {x.max_h}{ x.dual_swatch ? " | Dual Swatch" : ""}</span>
                                 </div>
                               )
                             })
@@ -672,7 +698,12 @@ class EditProduct extends React.Component {
           name: this.state.fields[3],
           type: this.state.fields[5],
           value: this.state.fields[6],
-          quantity: this.state.fields[7]
+          quantity: this.state.fields[7],
+          min_w: this.state.fields[0],
+          max_w: this.state.fields[1],
+          min_h: this.state.fields[2],
+          max_h: this.state.fields[4],
+          dual_swatch: this.state.fields[8]
         }
         break;
       case "surcharge-group":

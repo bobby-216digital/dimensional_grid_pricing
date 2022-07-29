@@ -178,7 +178,12 @@ function createProductObject(subtypes, priceGroups, swatches, priceGrids, gridSu
                   id: lineSurcharges[n].id,
                   name: lineSurcharges[n].name,
                   type: lineSurcharges[n].type,
-                  quantity: lineSurcharges[n].allow_quantity
+                  quantity: lineSurcharges[n].allow_quantity,
+                  min_w: lineSurcharges[n].min_w,
+                  max_w: lineSurcharges[n].max_w,
+                  min_h: lineSurcharges[n].min_h,
+                  max_h: lineSurcharges[n].max_h,
+                  dual_swatch: lineSurcharges[n].dual_swatch
                 }
 
                 sgObj.lineSurcharges.push(lineObj);
@@ -281,9 +286,12 @@ app.prepare().then(async () => {
         "variant": {
           "option1": ctx.request.body.items[0].opts,
           "price": ctx.request.body.items[0].price,
-          "inventory_policy": "continue"
+          "inventory_policy": "continue",
+          "properties": ctx.request.body.items[0].properties
         }
       }
+
+      console.log(data)
 
       let genVariant = async function () {
         const response = await fetch('https://the-window-blind-store.myshopify.com/admin/api/2021-07/products/' + ctx.request.body.items[0].id + '/variants.json', {
@@ -306,7 +314,8 @@ app.prepare().then(async () => {
           let payload = {
             'items': [{
               'id': value.variant.id,
-              'quantity': ctx.request.body.items[0].quantity
+              'quantity': ctx.request.body.items[0].quantity,
+              'properties': ctx.request.body.items[0].properties
             }]
           }
           setTimeout(() => {
@@ -423,17 +432,29 @@ app.prepare().then(async () => {
       console.log(res.rows)
       surchargeGroups.rows.map((x) => {
         asyncAddSg(x, pid)
+        .catch(error => {
+          console.log(error)
+        })
       })
       priceGrids.rows.map((x) => {
         asyncAddPg(x, pid)
+        .catch(error => {
+          console.log(error)
+        })
       })
-      swatches.rows.map((x) => {
-        if (x.dup_id) {
-          asyncAddSw(x, pid, true)
-        } else {
-          asyncAddSw(x, pid, false)
-        }
-      })
+      // swatches.rows.map((x) => {
+      //   if (x.dup_id) {
+      //     asyncAddSw(x, pid, true)
+      //     .catch(error => {
+      //       console.log(error)
+      //     })
+      //   } else {
+      //     asyncAddSw(x, pid, false)
+      //     .catch(error => {
+      //       console.log(error)
+      //     })
+      //   }
+      // })
     }
   )
 
@@ -448,8 +469,14 @@ app.prepare().then(async () => {
   let asyncAddSg = async (x, pid) => {
     let res = await pool.query('INSERT INTO surcharge_group (parent_id, name, allow_multiple) VALUES ($1, $2, $3) RETURNING *', [pid, x.name, x.allow_multiple]);
     res.rows.map((y) => {
-      asyncGetGs(x.id, y.id);
-      asyncGetLs(x.id, y.id);
+      asyncGetGs(x.id, y.id)
+      .catch(error => {
+        console.log(error)
+      })
+      asyncGetLs(x.id, y.id)
+      .catch(error => {
+        console.log(error)
+      })
     })
   }
 
@@ -457,6 +484,9 @@ app.prepare().then(async () => {
     let gridSurcharges = await pool.query('SELECT * FROM grid_surcharges WHERE parent_id = $1', [x]);
     gridSurcharges.rows.map((z) => {
       asyncAddGs(y, z)
+      .catch(error => {
+        console.log(error)
+      })
     })
   }
 
@@ -466,6 +496,9 @@ app.prepare().then(async () => {
     console.log(lineSurcharges.rows)
     lineSurcharges.rows.map((z) => {
       asyncAddLs(y, z)
+      .catch(error => {
+        console.log(error)
+      })
     })
   }
 
@@ -475,7 +508,7 @@ app.prepare().then(async () => {
 
   let asyncAddLs = async (y, z) => {
     console.log(y, z);
-    let res = await pool.query('INSERT INTO line_surcharges (parent_id, name, type, value, allow_quantity) VALUES ($1, $2, $3, $4, $5)', [y, z.name, z.type, z.value, z.allow_quantity]);
+    let res = await pool.query('INSERT INTO line_surcharges (parent_id, name, type, value, allow_quantity, min_w, max_w, min_h, max_h, dual_swatch) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [y, z.name, z.type, z.value, z.allow_quantity, z.min_w, z.max_w, z.min_h, z.max_h, z.dual_swatch]);
   }
 
   let asyncAddPg = async (x, pid) => {
@@ -498,7 +531,7 @@ app.prepare().then(async () => {
     koaBody(),
     async (ctx, next) => {
       let body = ctx.request.body;
-      let res = await pool.query('INSERT INTO line_surcharges (parent_id, name, type, value, allow_quantity) VALUES ($1, $2, $3, $4, $5)', [ctx.params.gid, body.name, body.type, body.value, body.quantity]);
+      let res = await pool.query('INSERT INTO line_surcharges (parent_id, name, type, value, allow_quantity, min_w, max_w, min_h, max_h, dual_swatch) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [ctx.params.gid, body.name, body.type, body.value, body.quantity, body.min_w, body.max_w, body.min_h, body.max_h, body.dual_swatch]);
       ctx.body = res.rows;
     }
   )
